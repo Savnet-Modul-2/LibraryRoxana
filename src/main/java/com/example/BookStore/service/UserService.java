@@ -2,12 +2,11 @@ package com.example.BookStore.service;
 
 import com.example.BookStore.entities.User;
 import com.example.BookStore.repository.UserRepository;
-import com.google.common.hash.Hashing;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.apache.commons.codec.digest.DigestUtils;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -19,23 +18,26 @@ public class UserService {
     private EmailService emailService;
 
     public User create(User user) {
-        //Guava ne ofera Hashing.sha256() pt a genera un hash SHA-256.
-        user.setPassword(Hashing.sha256()
-                //face hashing pe baza parolei utilizatorului
-                .hashString(user.getPassword(), StandardCharsets.UTF_8)
-                .toString());
+        String sha256Hex = DigestUtils.sha256Hex(user.getPassword()).toUpperCase();
+        user.setPassword(sha256Hex);
 
-        // generare cod verificare (6 cifre)
-        String verificationCode = String.format("%06d", new Random().nextInt(999999));
+        String verificationCode = String.valueOf(new Random().nextInt(100000, 999999));
         user.setVerificationCode(verificationCode);
         user.setVerificationCodeExpiration(LocalDateTime.now().plusMinutes(10));
         user.setVerifiedAccount(false);
 
-        // Salvare user si trimitere email
         User savedUser = userRepository.save(user);
         emailService.sendVerificationEmail(user.getEmail(), verificationCode);
         return savedUser;
     }
+
+
+    public User login(String email, String password) {
+        String sha256Hex = DigestUtils.sha256Hex(password);
+        return userRepository.findByEmailAndPasswordAndVerifiedAccountTrue(email, sha256Hex)
+                .orElseThrow(EntityNotFoundException::new);
+    }
+
 
     public User verify(String email, String verificationCode) {
         User user = userRepository.findByEmail(email)
@@ -55,11 +57,12 @@ public class UserService {
 
         return userRepository.save(user);
     }
-    public void deleteUser(Long userId){
+
+    public void deleteUser(Long userId) {
         userRepository.deleteById(userId);
     }
 
-    public User updateUser(User user,Long id){
+    public User updateUser(User user, Long id) {
         return userRepository.findById(id).map(userMap ->
         {
 
@@ -77,6 +80,6 @@ public class UserService {
 
             return userRepository.save(user);
 
-        }).orElseThrow(()-> new EntityNotFoundException("User not found with id:"+id));
+        }).orElseThrow(() -> new EntityNotFoundException("User not found with id:" + id));
     }
 }

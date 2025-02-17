@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -22,6 +24,13 @@ public class UserController {
         UserDto createdUserDTO = UserMapper.toDto(createdUser);
         return ResponseEntity.ok(createdUserDTO);
     }
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserDto userDto){
+        User userToLogin=UserMapper.toEntity(userDto);
+        User user=userService.login(userToLogin.getEmail(),userToLogin.getPassword());
+        return ResponseEntity.ok(UserMapper.toDto(user));
+    }
+
     @PostMapping("/verify")
     public ResponseEntity<String> verifyAccount(@RequestParam String email, @RequestParam String code) {
         userService.verify(email, code);
