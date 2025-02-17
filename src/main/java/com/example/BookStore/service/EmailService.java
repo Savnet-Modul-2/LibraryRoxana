@@ -18,9 +18,7 @@ public class EmailService {
             message.setText("Codul tau de verificare este: " + code);
             mailSender.send(message);
         } catch (Exception e) {
-            // Loghează sau aruncă o excepție personalizată
             System.out.println("Eroare la trimiterea emailului: " + e.getMessage());
-            // Aruncă o excepție pentru a semnaliza o problemă
             throw new RuntimeException("Failed to send verification email", e);
         }
     }

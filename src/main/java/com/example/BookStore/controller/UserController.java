@@ -17,9 +17,9 @@ public class UserController {
     private UserMapper userMapper;
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody UserDto userDto) {
-        User userEntity = userMapper.toEntity(userDto);
+        User userEntity = UserMapper.toEntity(userDto);
         User createdUser = userService.create(userEntity);
-        UserDto createdUserDTO = userMapper.toDto(createdUser);
+        UserDto createdUserDTO = UserMapper.toDto(createdUser);
         return ResponseEntity.ok(createdUserDTO);
     }
     @PostMapping("/verify")
@@ -30,9 +30,9 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@RequestBody UserDto userDTO, @PathVariable Long id) {
-        User userEntity = userMapper.toEntity(userDTO);
+        User userEntity = UserMapper.toEntity(userDTO);
         User userUpdate = userService.updateUser(userEntity, id);
-        UserDto updatedUserDTO = userMapper.toDto(userUpdate);
+        UserDto updatedUserDTO = UserMapper.toDto(userUpdate);
 
         return ResponseEntity.ok(updatedUserDTO);
     }
