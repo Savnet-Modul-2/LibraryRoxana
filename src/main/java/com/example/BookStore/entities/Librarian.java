@@ -5,42 +5,31 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
-@Entity(name = "user")
-@Table(name = "USER", schema = "public")
-public class User {
+@Entity(name = "librarian")
+@Table(name = "LIBRARIAN", schema = "public")
+public class Librarian {
     @Id
-    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
-    @Column(name = "FIRST_NAME")
-    private String firstName;
-
-    @Column(name = "LAST_NAME")
-    private String lastName;
-
-    @Column(name = "YEAR_OF_BIRTH")
-    private Integer yearOfBirth;
-
-    @Column(name = "GENDER")
-    private String gender;
+    @Column(name = "NAME")
+    private String name;
 
     @Column(name = "EMAIL")
     private String email;
 
-    @Column(name = "PHONE_NUMBER")
-    private String phoneNumber;
-
     @Column(name = "PASSWORD")
     private String password;
 
-    @Column(name = "COUNTRY")
-    private String country;
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
+    @JoinColumn(name = "library_id", referencedColumnName = "id")
+    private Library library;
+
 
     @Column(name = "VERIFIED_ACCOUNT")
     private Boolean verifiedAccount = false;
@@ -50,4 +39,5 @@ public class User {
 
     @Column(name = "VERIFICATION_CODE_EXPIRATION")
     private LocalDateTime verificationCodeExpiration;
+
 }
