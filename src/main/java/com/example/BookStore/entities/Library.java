@@ -25,7 +25,7 @@ public class Library {
     @Column(name = "PHONE_NUMBER")
     private Integer phoneNumber;
 
-    @OneToOne(mappedBy = "library", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "library", cascade = CascadeType.ALL)
     private Librarian librarian;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},

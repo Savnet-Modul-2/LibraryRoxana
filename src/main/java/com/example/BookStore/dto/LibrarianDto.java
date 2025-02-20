@@ -1,6 +1,5 @@
 package com.example.BookStore.dto;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,5 +15,5 @@ public class LibrarianDto {
     private Boolean verifiedAccount = false;
     private String verificationCode;
     private LocalDateTime verificationCodeExpiration;
-    private Long libraryId;
+    private LibraryDto library;
 }
