@@ -11,5 +11,5 @@ public class LibraryDto {
     private String name;
     private String address;
     private Integer phoneNumber;
-    private List<BoodDto> books;
+    private List<BookDto> books;
 }

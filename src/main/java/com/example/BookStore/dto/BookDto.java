@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 @Getter
 @Setter
-public class BoodDto {
+public class BookDto {
     private Long id;
     private Integer isbn;
     private String title;
