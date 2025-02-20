@@ -2,9 +2,9 @@ package com.example.BookStore.service;
 
 import com.example.BookStore.entities.Librarian;
 import com.example.BookStore.entities.Library;
-import com.example.BookStore.entities.User;
 import com.example.BookStore.repository.LibrarianRepository;
 import com.example.BookStore.repository.LibraryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,5 +42,43 @@ public class LibrarianService {
 
         return savedLibrarian;
     }
+    public Librarian login(String email, String password) {
+        String sha256Hex = DigestUtils.sha256Hex(password).toUpperCase();
+        return librarianRepository.findByEmailAndPasswordAndVerifiedAccountTrue(email, sha256Hex)
+                .orElseThrow(EntityNotFoundException::new);
+    }
 
+
+    public Librarian verify(String email, String verificationCode) {
+        Librarian librarian = librarianRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Librarian not found"));
+
+        if (librarian.getVerificationCodeExpiration() == null || LocalDateTime.now().isAfter(librarian.getVerificationCodeExpiration())) {
+            throw new RuntimeException("Verification code has expired.");
+        }
+
+        if (!librarian.getVerificationCode().equals(verificationCode)) {
+            throw new RuntimeException("Invalid verification code.");
+        }
+
+        librarian.setVerifiedAccount(true);
+        librarian.setVerificationCode(null);
+        librarian.setVerificationCodeExpiration(null);
+
+        return librarianRepository.save(librarian);
+    }
+    public Librarian update(Librarian librarian,Long id){
+        return librarianRepository.findById(id).map(librarian1 -> {
+            librarian1.setName(librarian.getName());
+            librarian1.setEmail(librarian.getEmail());
+            librarian1.setPassword(librarian.getPassword());
+           librarian1.setLibrary(librarian.getLibrary());
+           return librarianRepository.save(librarian);
+        }).orElseThrow(() -> new EntityNotFoundException("Librarian not found with id:" + id));
+
+    }
+
+    public void deleteLibrarian(Long librarianId) {
+        librarianRepository.deleteById(librarianId);
+    }
 }
