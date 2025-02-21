@@ -6,6 +6,8 @@ import com.example.BookStore.repository.BookRepository;
 import com.example.BookStore.repository.LibraryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,5 +64,9 @@ public class BookService {
 
     public List<Book> findAll() {
         return bookRepository.findAll();
+    }
+
+    public Page<Book> findAllBooksPaginated(Pageable pageable) {
+        return bookRepository.findAll(pageable);
     }
 }

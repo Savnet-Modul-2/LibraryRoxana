@@ -5,6 +5,10 @@ import com.example.BookStore.entities.Book;
 import com.example.BookStore.mapper.BookMapper;
 import com.example.BookStore.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,5 +54,18 @@ public class BookController {
                 .toList();
         return ResponseEntity.ok(books);
     }
+
+    @GetMapping("/page")
+    public ResponseEntity<Page<BookDto>> getAllBooksPaginated(
+            @RequestParam(name="pageSize") int size,
+            @RequestParam(name="pageNumber")int page){
+
+        Page<Book> foundBooks = bookService.findAllBooksPaginated(PageRequest.of(page, size));
+        Page<BookDto> bookDtos = foundBooks.map(BookMapper::toDto);
+
+        return ResponseEntity.ok(bookDtos);
+    }
+
+
 
 }
