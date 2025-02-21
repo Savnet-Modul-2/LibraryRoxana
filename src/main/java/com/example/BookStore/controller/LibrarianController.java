@@ -4,7 +4,9 @@ import com.example.BookStore.dto.LibrarianDto;
 import com.example.BookStore.entities.Librarian;
 import com.example.BookStore.mapper.LibrarianMapper;
 import com.example.BookStore.service.LibrarianService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,6 +47,10 @@ public class LibrarianController {
 
         return ResponseEntity.ok(updatedLibrarianDTO);
     }
+
+
+
+
 
     @DeleteMapping("/{librarianId}")
     public ResponseEntity<?> deleteLibrarian(@PathVariable Long librarianId) {

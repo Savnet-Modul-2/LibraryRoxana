@@ -74,7 +74,10 @@ public class UserService {
             userMap.setGender(user.getGender());
             userMap.setEmail(user.getEmail());
             userMap.setPhoneNumber(user.getPhoneNumber());
-            userMap.setPassword(user.getPassword());
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                String sha256Hex = DigestUtils.sha256Hex(user.getPassword()).toUpperCase();
+                userMap.setPassword(sha256Hex);
+            }
             userMap.setCountry(user.getCountry());
             userMap.setVerifiedAccount(user.getVerifiedAccount());
             userMap.setVerificationCode(user.getVerificationCode());

@@ -1,6 +1,5 @@
 package com.example.BookStore.service;
 
-import com.example.BookStore.entities.Book;
 import com.example.BookStore.entities.Librarian;
 import com.example.BookStore.entities.Library;
 import com.example.BookStore.repository.LibrarianRepository;
@@ -73,7 +72,10 @@ public class LibrarianService {
         return librarianRepository.findById(id).map(librarian1 -> {
             librarian1.setName(librarian.getName());
             librarian1.setEmail(librarian.getEmail());
-            librarian1.setPassword(librarian.getPassword());
+            if (librarian.getPassword() != null && !librarian.getPassword().isEmpty()) {
+                String sha256Hex = DigestUtils.sha256Hex(librarian.getPassword()).toUpperCase();
+                librarian1.setPassword(sha256Hex);
+            }
             if (librarian.getLibrary() != null) {
                 Library library = libraryRepository.findById(librarian.getLibrary().getId())
                         .orElseThrow(() -> new EntityNotFoundException("Library not found with id: " + librarian.getLibrary().getId()));

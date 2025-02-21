@@ -1,7 +1,6 @@
 package com.example.BookStore.mapper;
 
 import com.example.BookStore.dto.LibrarianDto;
-import com.example.BookStore.dto.LibraryDto;
 import com.example.BookStore.entities.Librarian;
 import com.example.BookStore.entities.Library;
 
@@ -12,6 +11,7 @@ public class LibrarianMapper {
         }
 
         Librarian librarian = new Librarian();
+        librarian.setId(librarianDto.getId());
         librarian.setName(librarianDto.getName());
         librarian.setEmail(librarianDto.getEmail());
         librarian.setPassword(librarianDto.getPassword());
@@ -21,6 +21,11 @@ public class LibrarianMapper {
 
         if (librarianDto.getLibrary() != null) {
             Library library = LibraryMapper.toEntity(librarianDto.getLibrary());
+
+            if (library.getId() == null) {
+                throw new IllegalArgumentException("Library ID must not be null!");
+            }
+
             librarian.setLibrary(library);
             library.setLibrarian(librarian);
         }
