@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/librarians")
 public class LibrarianController {
@@ -48,5 +50,19 @@ public class LibrarianController {
     public ResponseEntity<?> deleteLibrarian(@PathVariable Long librarianId) {
         librarianService.deleteLibrarian(librarianId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{librarianId}")
+    public ResponseEntity<LibrarianDto> getById(@PathVariable Long librarianId) {
+        Librarian foundLibrarian = librarianService.getById(librarianId);
+        return ResponseEntity.ok(LibrarianMapper.toDto(foundLibrarian));
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<LibrarianDto>> findAll() {
+        List<LibrarianDto> librarians = librarianService.findAll().stream()
+                .map(LibrarianMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(librarians);
     }
 }

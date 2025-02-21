@@ -34,5 +34,13 @@ public class Library {
             mappedBy = "library")
     private List<Book> books = new ArrayList<>();
 
+    public void addBook(Book book){
+        books.add(book);
+        book.setLibrary(this);
+    }
+    public void removeBook(Book book){
+        books.remove(book);
+        book.setLibrary(null);//stergem leg dintre ele
+    }
 
 }

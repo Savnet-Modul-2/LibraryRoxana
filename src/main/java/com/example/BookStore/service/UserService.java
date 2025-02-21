@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -78,8 +80,15 @@ public class UserService {
             userMap.setVerificationCode(user.getVerificationCode());
             userMap.setVerificationCodeExpiration(user.getVerificationCodeExpiration());
 
-            return userRepository.save(user);
+            return userRepository.save(userMap);
 
         }).orElseThrow(() -> new EntityNotFoundException("User not found with id:" + id));
+    }
+
+    public User getById(Long id){
+        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+    public List<User> findAll(){
+        return userRepository.findAll();
     }
 }

@@ -1,5 +1,6 @@
 package com.example.BookStore.service;
 
+import com.example.BookStore.entities.Book;
 import com.example.BookStore.entities.Librarian;
 import com.example.BookStore.entities.Library;
 import com.example.BookStore.repository.LibrarianRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -72,13 +74,26 @@ public class LibrarianService {
             librarian1.setName(librarian.getName());
             librarian1.setEmail(librarian.getEmail());
             librarian1.setPassword(librarian.getPassword());
-           librarian1.setLibrary(librarian.getLibrary());
-           return librarianRepository.save(librarian);
+            if (librarian.getLibrary() != null) {
+                Library library = libraryRepository.findById(librarian.getLibrary().getId())
+                        .orElseThrow(() -> new EntityNotFoundException("Library not found with id: " + librarian.getLibrary().getId()));
+                librarian1.setLibrary(library);
+            }
+
+            return librarianRepository.save(librarian1);
         }).orElseThrow(() -> new EntityNotFoundException("Librarian not found with id:" + id));
 
     }
 
     public void deleteLibrarian(Long librarianId) {
         librarianRepository.deleteById(librarianId);
+    }
+
+    public Librarian getById(Long id) {
+        return librarianRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    }
+
+    public List<Librarian> findAll() {
+        return librarianRepository.findAll();
     }
 }

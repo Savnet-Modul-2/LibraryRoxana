@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -50,5 +51,19 @@ public class UserController {
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> getById(@PathVariable Long userId) {
+        User foundUser = userService.getById(userId);
+        return ResponseEntity.ok(UserMapper.toDto(foundUser));
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<UserDto>> findAll() {
+        List<UserDto> users = userService.findAll().stream()
+                .map(UserMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(users);
     }
 }
