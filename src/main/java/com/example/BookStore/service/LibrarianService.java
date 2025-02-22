@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -23,7 +24,6 @@ public class LibrarianService {
     private LibraryRepository libraryRepository;
 
     public Librarian create(Librarian librarian) {
-
         String sha256Hex = DigestUtils.sha256Hex(librarian.getPassword()).toUpperCase();
         librarian.setPassword(sha256Hex);
 
@@ -33,42 +33,39 @@ public class LibrarianService {
         librarian.setVerifiedAccount(false);
 
         if (librarian.getLibrary() != null) {
-            Library library = librarian.getLibrary();
+            Library existingLibrary = libraryRepository.findByName(librarian.getLibrary().getName())
+                    .orElse(null);
 
-            Library savedLibrary = libraryRepository.save(library);
-            librarian.setLibrary(savedLibrary);
+            if (existingLibrary != null) {
+                // verific daca exista deja un bibliotecar la library
+                Optional<Librarian> existingLibrarian = librarianRepository.findByLibraryId(existingLibrary.getId());
+
+                if (existingLibrarian.isPresent()) {
+                    throw new IllegalArgumentException("Library already has a librarian assigned!");
+                }
+                librarian.setLibrary(existingLibrary);
+            } else {
+                // nu exista ->>>> cream library
+                Library newLibrary = libraryRepository.save(librarian.getLibrary());
+                librarian.setLibrary(newLibrary);
+            }
         }
+
         Librarian savedLibrarian = librarianRepository.save(librarian);
         emailService.sendVerificationEmail(librarian.getEmail(), verificationCode);
 
         return savedLibrarian;
     }
-    public Librarian login(String email, String password) {
-        String sha256Hex = DigestUtils.sha256Hex(password).toUpperCase();
-        return librarianRepository.findByEmailAndPasswordAndVerifiedAccountTrue(email, sha256Hex)
-                .orElseThrow(EntityNotFoundException::new);
+
+    public Librarian getById(Long id) {
+        return librarianRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-
-    public Librarian verify(String email, String verificationCode) {
-        Librarian librarian = librarianRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Librarian not found"));
-
-        if (librarian.getVerificationCodeExpiration() == null || LocalDateTime.now().isAfter(librarian.getVerificationCodeExpiration())) {
-            throw new RuntimeException("Verification code has expired.");
-        }
-
-        if (!librarian.getVerificationCode().equals(verificationCode)) {
-            throw new RuntimeException("Invalid verification code.");
-        }
-
-        librarian.setVerifiedAccount(true);
-        librarian.setVerificationCode(null);
-        librarian.setVerificationCodeExpiration(null);
-
-        return librarianRepository.save(librarian);
+    public List<Librarian> findAll() {
+        return librarianRepository.findAll();
     }
-    public Librarian update(Librarian librarian,Long id){
+
+    public Librarian update(Librarian librarian, Long id) {
         return librarianRepository.findById(id).map(librarian1 -> {
             librarian1.setName(librarian.getName());
             librarian1.setEmail(librarian.getEmail());
@@ -91,11 +88,28 @@ public class LibrarianService {
         librarianRepository.deleteById(librarianId);
     }
 
-    public Librarian getById(Long id) {
-        return librarianRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public Librarian verify(String email, String verificationCode) {
+        Librarian librarian = librarianRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Librarian not found"));
+
+        if (librarian.getVerificationCodeExpiration() == null || LocalDateTime.now().isAfter(librarian.getVerificationCodeExpiration())) {
+            throw new RuntimeException("Verification code has expired.");
+        }
+
+        if (!librarian.getVerificationCode().equals(verificationCode)) {
+            throw new RuntimeException("Invalid verification code.");
+        }
+
+        librarian.setVerifiedAccount(true);
+        librarian.setVerificationCode(null);
+        librarian.setVerificationCodeExpiration(null);
+
+        return librarianRepository.save(librarian);
     }
 
-    public List<Librarian> findAll() {
-        return librarianRepository.findAll();
+    public Librarian login(String email, String password) {
+        String sha256Hex = DigestUtils.sha256Hex(password).toUpperCase();
+        return librarianRepository.findByEmailAndPasswordAndVerifiedAccountTrue(email, sha256Hex)
+                .orElseThrow(EntityNotFoundException::new);
     }
 }

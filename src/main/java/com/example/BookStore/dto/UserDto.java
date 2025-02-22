@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class UserDto {
@@ -16,7 +17,7 @@ public class UserDto {
     private String phoneNumber;
     private String password;
     private String country;
-    private Boolean verifiedAccount=false;
+    private Boolean verifiedAccount = false;
     private String verificationCode;
     private LocalDateTime verificationCodeExpiration;
 }

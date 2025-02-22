@@ -4,8 +4,8 @@ import com.example.BookStore.dto.BookDto;
 import com.example.BookStore.entities.Book;
 
 public class BookMapper {
-    public static Book toEntity(BookDto bookDto){
-        Book book=new Book();
+    public static Book toEntity(BookDto bookDto) {
+        Book book = new Book();
         book.setIsbn(bookDto.getIsbn());
         book.setTitle(bookDto.getTitle());
         book.setAuthor(bookDto.getAuthor());
@@ -15,8 +15,9 @@ public class BookMapper {
         book.setLanguage(bookDto.getLanguage());
         return book;
     }
-    public static BookDto toDto(Book book){
-        BookDto bookDto=new BookDto();
+
+    public static BookDto toDto(Book book) {
+        BookDto bookDto = new BookDto();
         bookDto.setId(book.getId());
         bookDto.setIsbn(book.getIsbn());
         bookDto.setTitle(book.getTitle());

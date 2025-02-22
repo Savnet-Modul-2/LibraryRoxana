@@ -9,15 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
     @Autowired
     private UserService userService;
-    @Autowired
-    private UserMapper userMapper;
+
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody UserDto userDto) {
         User userEntity = UserMapper.toEntity(userDto);
@@ -25,17 +23,19 @@ public class UserController {
         UserDto createdUserDTO = UserMapper.toDto(createdUser);
         return ResponseEntity.ok(createdUserDTO);
     }
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody UserDto userDto){
-        User userToLogin=UserMapper.toEntity(userDto);
-        User user=userService.login(userToLogin.getEmail(),userToLogin.getPassword());
-        return ResponseEntity.ok(UserMapper.toDto(user));
+
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserDto> getById(@PathVariable Long userId) {
+        User foundUser = userService.getById(userId);
+        return ResponseEntity.ok(UserMapper.toDto(foundUser));
     }
 
-    @PostMapping("/verify")
-    public ResponseEntity<String> verifyAccount(@RequestParam String email, @RequestParam String code) {
-        userService.verify(email, code);
-        return ResponseEntity.ok("Cont verificat cu succes!");
+    @GetMapping()
+    public ResponseEntity<List<UserDto>> findAll() {
+        List<UserDto> users = userService.findAll().stream()
+                .map(UserMapper::toDto)
+                .toList();
+        return ResponseEntity.ok(users);
     }
 
     @PutMapping("/{id}")
@@ -53,17 +53,16 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserDto> getById(@PathVariable Long userId) {
-        User foundUser = userService.getById(userId);
-        return ResponseEntity.ok(UserMapper.toDto(foundUser));
+    @PostMapping("/verify")
+    public ResponseEntity<?> verifyAccount(@RequestParam String email, @RequestParam String code) {
+        userService.verify(email, code);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping()
-    public ResponseEntity<List<UserDto>> findAll() {
-        List<UserDto> users = userService.findAll().stream()
-                .map(UserMapper::toDto)
-                .toList();
-        return ResponseEntity.ok(users);
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserDto userDto) {
+        User userToLogin = UserMapper.toEntity(userDto);
+        User user = userService.login(userToLogin.getEmail(), userToLogin.getPassword());
+        return ResponseEntity.ok(UserMapper.toDto(user));
     }
 }
