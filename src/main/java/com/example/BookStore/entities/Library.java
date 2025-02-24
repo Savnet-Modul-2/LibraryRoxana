@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Getter
 @Setter
 @Entity(name = "library")
@@ -34,11 +35,12 @@ public class Library {
             mappedBy = "library")
     private List<Book> books = new ArrayList<>();
 
-    public void addBook(Book book){
+    public void addBook(Book book) {
         books.add(book);
         book.setLibrary(this);
     }
-    public void removeBook(Book book){
+
+    public void removeBook(Book book) {
         books.remove(book);
         book.setLibrary(null);//stergem leg dintre ele
     }

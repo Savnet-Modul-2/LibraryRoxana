@@ -21,18 +21,12 @@ public class LibrarianMapper {
 
         if (librarianDto.getLibrary() != null) {
             Library library = LibraryMapper.toEntity(librarianDto.getLibrary());
-
-            if (library.getId() == null) {
-                throw new IllegalArgumentException("Library ID must not be null!");
-            }
-
             librarian.setLibrary(library);
-            library.setLibrarian(librarian);
         }
-
 
         return librarian;
     }
+
 
     public static LibrarianDto toDto(Librarian librarian) {
         if (librarian == null) {

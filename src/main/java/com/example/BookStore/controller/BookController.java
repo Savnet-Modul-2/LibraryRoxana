@@ -5,26 +5,44 @@ import com.example.BookStore.entities.Book;
 import com.example.BookStore.mapper.BookMapper;
 import com.example.BookStore.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("/books")
 public class BookController {
     @Autowired
     private BookService bookService;
+
     @PostMapping("/{libraryId}")
-    public ResponseEntity<?> createBook(@RequestBody BookDto bookDto,@PathVariable Long libraryId){
-        Book bookToEntity= BookMapper.toEntity(bookDto);
-        Book createdBook=bookService.create(bookToEntity,libraryId);
-        BookDto createdBookToDto=BookMapper.toDto(createdBook);
+    public ResponseEntity<?> createBook(@RequestBody BookDto bookDto, @PathVariable Long libraryId) {
+        Book bookToEntity = BookMapper.toEntity(bookDto);
+        Book createdBook = bookService.create(bookToEntity, libraryId);
+        BookDto createdBookToDto = BookMapper.toDto(createdBook);
         return ResponseEntity.ok(createdBookToDto);
     }
+
+    @GetMapping("/{bookId}")
+    public ResponseEntity<BookDto> getById(@PathVariable Long bookId) {
+        Book foundBook = bookService.getById(bookId);
+        return ResponseEntity.ok(BookMapper.toDto(foundBook));
+    }
+
+    @GetMapping()
+    public ResponseEntity<List<BookDto>> getAllBooks(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Integer size) {
+
+        List<BookDto> books = bookService.findAllBooks(page, size)
+                .stream()
+                .map(BookMapper::toDto)
+                .toList();
+
+        return ResponseEntity.ok(books);
+    }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateBook(@RequestBody BookDto bookDto, @PathVariable Long id) {
@@ -40,32 +58,5 @@ public class BookController {
         bookService.removeFromLibrary(bookId);
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/{bookId}")
-    public ResponseEntity<BookDto> getById(@PathVariable Long bookId) {
-        Book foundBook = bookService.getById(bookId);
-        return ResponseEntity.ok(BookMapper.toDto(foundBook));
-    }
-
-    @GetMapping()
-    public ResponseEntity<List<BookDto>> findAll() {
-        List<BookDto> books = bookService.findAll().stream()
-                .map(BookMapper::toDto)
-                .toList();
-        return ResponseEntity.ok(books);
-    }
-
-    @GetMapping("/page")
-    public ResponseEntity<Page<BookDto>> getAllBooksPaginated(
-            @RequestParam(name="pageSize") int size,
-            @RequestParam(name="pageNumber")int page){
-
-        Page<Book> foundBooks = bookService.findAllBooksPaginated(PageRequest.of(page, size));
-        Page<BookDto> bookDtos = foundBooks.map(BookMapper::toDto);
-
-        return ResponseEntity.ok(bookDtos);
-    }
-
-
 
 }
