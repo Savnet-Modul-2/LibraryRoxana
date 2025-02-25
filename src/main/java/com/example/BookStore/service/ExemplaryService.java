@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ExemplaryService {
@@ -24,37 +22,34 @@ public class ExemplaryService {
     private BookRepository bookRepository;
 
     public List<Exemplary> create(String publisher, Integer maxReservationDays, Long bookId, Integer count) {
-        Optional<Book> optionalBook = bookRepository.findById(bookId);
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new EntityNotFoundException("Book not found with id: " + bookId));
 
-        if (optionalBook.isEmpty()) {
-            throw new EntityNotFoundException("Book not found with id:" + bookId);
-        }
-
-        Book book = optionalBook.get();
         List<Exemplary> exemplars = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
             Exemplary exemplary = new Exemplary();
             exemplary.setPublisher(publisher);
             exemplary.setMaxReservationDays(maxReservationDays);
-            exemplary.setBook(book);
+            book.addExemplary(exemplary);
             exemplars.add(exemplary);
         }
 
         return exemplaryRepository.saveAll(exemplars);
     }
 
-    public List<ExemplaryDto> findExemplarsByBookId(Long bookId, Integer page, Integer size) {
+    public List<ExemplaryDto> findByBookId(Long bookId, Integer page, Integer size) {
         if (page != null && size != null && page >= 0 && size > 0) {
-            return exemplaryRepository.findByBookId(bookId, PageRequest.of(page, size)).stream().map(ExemplaryMapper::toDto).collect(Collectors.toList());
-        } else {
-            return exemplaryRepository.findByBookId(bookId).stream().map(ExemplaryMapper::toDto).collect(Collectors.toList());
-
-
+            return exemplaryRepository.findByBookId(bookId, PageRequest.of(page, size)).stream()
+                    .map(ExemplaryMapper::toDto)
+                    .toList();
         }
+        return exemplaryRepository.findByBookId(bookId).stream()
+                .map(ExemplaryMapper::toDto)
+                .toList();
     }
 
-    public void deleteExemplary(Long exemplaryId) {
+    public void delete(Long exemplaryId) {
         exemplaryRepository.deleteById(exemplaryId);
     }
 }

@@ -11,7 +11,7 @@ public class BookMapper {
         book.setAuthor(bookDto.getAuthor());
         book.setAppearanceDate(bookDto.getAppearanceDate());
         book.setNrOfPages(bookDto.getNrOfPages());
-        book.setCategory(bookDto.getCategory());
+        book.setBookCategory(bookDto.getBookCategory());
         book.setLanguage(bookDto.getLanguage());
         return book;
     }
@@ -24,7 +24,7 @@ public class BookMapper {
         bookDto.setAuthor(book.getAuthor());
         bookDto.setAppearanceDate(book.getAppearanceDate());
         bookDto.setNrOfPages(book.getNrOfPages());
-        bookDto.setCategory(book.getCategory());
+        bookDto.setBookCategory(book.getBookCategory());
         bookDto.setLanguage(book.getLanguage());
         return bookDto;
     }

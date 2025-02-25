@@ -44,5 +44,4 @@ public class Library {
         books.remove(book);
         book.setLibrary(null);//stergem leg dintre ele
     }
-
 }

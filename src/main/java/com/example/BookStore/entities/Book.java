@@ -35,7 +35,7 @@ public class Book {
 
     @Column(name = "CATEGORY")
     @Enumerated(EnumType.STRING)
-    private Category category;
+    private BookCategory bookCategory;
 
     @Column(name = "LANGUAGE")
     private String language;
@@ -50,7 +50,7 @@ public class Book {
             mappedBy = "book")
     private List<Exemplary> exemplars = new ArrayList<>();
 
-    private void addExemplary(Exemplary exemplary) {
+    public void addExemplary(Exemplary exemplary) {
         exemplars.add(exemplary);
         exemplary.setBook(this);
     }

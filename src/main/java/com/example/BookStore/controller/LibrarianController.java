@@ -16,7 +16,7 @@ public class LibrarianController {
     @Autowired
     private LibrarianService librarianService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<?> register(@RequestBody LibrarianDto librarianDto) {
         Librarian librarian = LibrarianMapper.toEntity(librarianDto);
         Librarian createdLibrarian = librarianService.create(librarian);
@@ -31,7 +31,7 @@ public class LibrarianController {
         return ResponseEntity.ok(LibrarianMapper.toDto(foundLibrarian));
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<LibrarianDto>> findAll() {
         List<LibrarianDto> librarians = librarianService.findAll().stream()
                 .map(LibrarianMapper::toDto)
@@ -50,7 +50,7 @@ public class LibrarianController {
 
     @DeleteMapping("/{librarianId}")
     public ResponseEntity<?> deleteLibrarian(@PathVariable Long librarianId) {
-        librarianService.deleteLibrarian(librarianId);
+        librarianService.delete(librarianId);
         return ResponseEntity.ok().build();
     }
 

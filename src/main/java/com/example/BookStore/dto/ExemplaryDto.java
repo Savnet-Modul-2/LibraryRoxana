@@ -9,6 +9,4 @@ public class ExemplaryDto {
     private Long id;
     private String publisher;
     private Integer maxReservationDays;
-
-
 }

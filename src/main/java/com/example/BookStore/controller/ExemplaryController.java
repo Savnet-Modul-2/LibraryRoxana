@@ -17,7 +17,7 @@ public class ExemplaryController {
     @Autowired
     private ExemplaryService exemplaryService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<List<ExemplaryDto>> createExemplars(@RequestBody CreatedExemplaryDto createdExemplaryDto) {
         List<Exemplary> exemplars = exemplaryService.create(
                 createdExemplaryDto.getPublisher(),
@@ -37,15 +37,13 @@ public class ExemplaryController {
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
 
-        List<ExemplaryDto> exemplars = exemplaryService.findExemplarsByBookId(bookId, page, size);
+        List<ExemplaryDto> exemplars = exemplaryService.findByBookId(bookId, page, size);
         return ResponseEntity.ok(exemplars);
     }
 
     @DeleteMapping("/{exemplaryId}")
     public ResponseEntity<?> deleteExemplary(@PathVariable Long exemplaryId) {
-        exemplaryService.deleteExemplary(exemplaryId);
+        exemplaryService.delete(exemplaryId);
         return ResponseEntity.ok().build();
     }
-
-
 }

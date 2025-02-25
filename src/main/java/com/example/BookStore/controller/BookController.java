@@ -30,7 +30,7 @@ public class BookController {
         return ResponseEntity.ok(BookMapper.toDto(foundBook));
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<BookDto>> getAllBooks(
             @RequestParam(required = false) Integer page,
             @RequestParam(required = false) Integer size) {
@@ -57,5 +57,4 @@ public class BookController {
         bookService.removeFromLibrary(bookId);
         return ResponseEntity.ok().build();
     }
-
 }
