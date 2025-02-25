@@ -30,7 +30,6 @@ public class Librarian {
     @JoinColumn(name = "library_id", referencedColumnName = "id")
     private Library library;
 
-
     @Column(name = "VERIFIED_ACCOUNT")
     private Boolean verifiedAccount = false;
 
@@ -39,5 +38,4 @@ public class Librarian {
 
     @Column(name = "VERIFICATION_CODE_EXPIRATION")
     private LocalDateTime verificationCodeExpiration;
-
 }

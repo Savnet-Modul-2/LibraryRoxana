@@ -6,9 +6,7 @@ import com.example.BookStore.repository.BookRepository;
 import com.example.BookStore.repository.LibraryRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,7 +47,7 @@ public class BookService {
             book.setAuthor(updatedBook.getAuthor());
             book.setAppearanceDate(updatedBook.getAppearanceDate());
             book.setNrOfPages(updatedBook.getNrOfPages());
-            book.setCategory(updatedBook.getCategory());
+            book.setBookCategory(updatedBook.getBookCategory());
             book.setLanguage(updatedBook.getLanguage());
             book.setLibrary(updatedBook.getLibrary());
             return bookRepository.save(book);

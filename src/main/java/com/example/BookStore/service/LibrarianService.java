@@ -84,7 +84,7 @@ public class LibrarianService {
 
     }
 
-    public void deleteLibrarian(Long librarianId) {
+    public void delete(Long librarianId) {
         librarianRepository.deleteById(librarianId);
     }
 

@@ -1,6 +1,6 @@
 package com.example.BookStore.entities;
 
-public enum Category {
+public enum BookCategory {
     FICTION,
     NON_FICTION,
     SCIENCE,

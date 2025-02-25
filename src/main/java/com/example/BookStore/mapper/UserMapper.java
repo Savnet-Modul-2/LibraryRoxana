@@ -2,9 +2,7 @@ package com.example.BookStore.mapper;
 
 import com.example.BookStore.dto.UserDto;
 import com.example.BookStore.entities.User;
-import org.springframework.stereotype.Component;
 
-@Component
 public class UserMapper {
     public static User toEntity(UserDto userDTO) {
         User user = new User();

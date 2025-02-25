@@ -16,7 +16,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<?> create(@RequestBody UserDto userDto) {
         User userEntity = UserMapper.toEntity(userDto);
         User createdUser = userService.create(userEntity);
@@ -30,7 +30,7 @@ public class UserController {
         return ResponseEntity.ok(UserMapper.toDto(foundUser));
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<UserDto>> findAll() {
         List<UserDto> users = userService.findAll().stream()
                 .map(UserMapper::toDto)
@@ -41,7 +41,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@RequestBody UserDto userDTO, @PathVariable Long id) {
         User userEntity = UserMapper.toEntity(userDTO);
-        User userUpdate = userService.updateUser(userEntity, id);
+        User userUpdate = userService.update(userEntity, id);
         UserDto updatedUserDTO = UserMapper.toDto(userUpdate);
 
         return ResponseEntity.ok(updatedUserDTO);
@@ -49,7 +49,7 @@ public class UserController {
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<?> deleteUser(@PathVariable Long userId) {
-        userService.deleteUser(userId);
+        userService.delete(userId);
         return ResponseEntity.ok().build();
     }
 

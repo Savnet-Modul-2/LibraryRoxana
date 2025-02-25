@@ -40,7 +40,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User updateUser(User user, Long id) {
+    public User update(User user, Long id) {
         return userRepository.findById(id).map(userMap ->
         {
 
@@ -64,7 +64,7 @@ public class UserService {
         }).orElseThrow(() -> new EntityNotFoundException("User not found with id:" + id));
     }
 
-    public void deleteUser(Long userId) {
+    public void delete(Long userId) {
         userRepository.deleteById(userId);
     }
 
