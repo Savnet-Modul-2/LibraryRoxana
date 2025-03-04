@@ -42,6 +42,10 @@ public class BookService {
         return bookRepository.findAll();
     }
 
+    public Page<Book> findBooks(String author, String title, Pageable pageable) {
+        return bookRepository.findBooks(author, title, pageable);
+    }
+
     public Book update(Book updatedBook, Long id) {
         return bookRepository.findById(id).map(book -> {
             book.setIsbn(updatedBook.getIsbn());
@@ -54,7 +58,6 @@ public class BookService {
             book.setLibrary(updatedBook.getLibrary());
             return bookRepository.save(book);
         }).orElseThrow(EntityNotFoundException::new);
-
     }
 
     public void removeFromLibrary(Long bookId) {
@@ -66,8 +69,5 @@ public class BookService {
 
         library.removeBook(book);
         bookRepository.save(book);
-    }
-    public Page<Book> findBooks(String author, String title, Pageable pageable) {
-        return bookRepository.findBooks(author, title, pageable);
     }
 }

@@ -1,9 +1,7 @@
 package com.example.Library.mapper;
 
-
 import com.example.Library.dto.ReservationDto;
 import com.example.Library.entities.Reservation;
-import com.example.Library.entities.User;
 
 public class ReservationMapper {
     public static Reservation toEntity(ReservationDto reservationDTO) {
@@ -16,6 +14,7 @@ public class ReservationMapper {
 
     public static ReservationDto toDto(Reservation reservation) {
         ReservationDto reservationDTO = new ReservationDto();
+        reservationDTO.setId(reservation.getId());
         reservationDTO.setStartDate(reservation.getStartDate());
         reservationDTO.setEndDate(reservation.getEndDate());
         reservationDTO.setStatusReservation(reservation.getStatusReservation());

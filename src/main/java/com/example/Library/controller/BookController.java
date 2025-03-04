@@ -45,20 +45,6 @@ public class BookController {
         return ResponseEntity.ok(books);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateBook(@RequestBody BookDto bookDto, @PathVariable Long id) {
-        Book bookEntity = BookMapper.toEntity(bookDto);
-        Book updatedBook = bookService.update(bookEntity, id);
-        BookDto updatedBookDTO = BookMapper.toDto(updatedBook);
-
-        return ResponseEntity.ok(updatedBookDTO);
-    }
-
-    @DeleteMapping("/{bookId}")
-    public ResponseEntity<?> deleteBook(@PathVariable Long bookId) {
-        bookService.removeFromLibrary(bookId);
-        return ResponseEntity.ok().build();
-    }
     @GetMapping("/paginated-search")
     public ResponseEntity<?> findBooksPaginated(
             @RequestParam(required = false) String author,
@@ -73,5 +59,20 @@ public class BookController {
         Page<BookDto> bookDtos = foundBooks.map(BookMapper::toDto);
 
         return ResponseEntity.ok(bookDtos);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateBook(@RequestBody BookDto bookDto, @PathVariable Long id) {
+        Book bookEntity = BookMapper.toEntity(bookDto);
+        Book updatedBook = bookService.update(bookEntity, id);
+        BookDto updatedBookDTO = BookMapper.toDto(updatedBook);
+
+        return ResponseEntity.ok(updatedBookDTO);
+    }
+
+    @DeleteMapping("/{bookId}")
+    public ResponseEntity<?> deleteBook(@PathVariable Long bookId) {
+        bookService.removeFromLibrary(bookId);
+        return ResponseEntity.ok().build();
     }
 }
