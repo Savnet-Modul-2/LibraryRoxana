@@ -1,6 +1,7 @@
 package com.example.Library.controller;
 
 import com.example.Library.dto.ReservationDto;
+import com.example.Library.dto.ReservationStatusDto;
 import com.example.Library.entities.Reservation;
 import com.example.Library.mapper.ReservationMapper;
 import com.example.Library.service.ReservationService;
@@ -21,5 +22,14 @@ public class ReservationController {
         Reservation reservationToCreate = ReservationMapper.toEntity(reservationDTO);
         Reservation createdReservation = reservationService.create(reservationToCreate, userId, bookId);
         return ResponseEntity.ok(ReservationMapper.toDto(createdReservation));
+    }
+
+    @PutMapping("/{reservationId}/status/{librarianId}")
+    public ResponseEntity<?> updateReservationStatus(@PathVariable Long reservationId,
+                                                     @PathVariable Long librarianId,
+                                                     @RequestBody ReservationStatusDto reservationStatusDto) {
+        Reservation reservationUpdated = reservationService.updateReservationStatus(reservationId, librarianId, reservationStatusDto.getStatusReservation());
+        ReservationDto reservationUpdatedDto = ReservationMapper.toDto(reservationUpdated);
+        return ResponseEntity.ok(reservationUpdatedDto);
     }
 }

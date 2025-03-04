@@ -24,7 +24,7 @@ public class Reservation {
     @Column(name = "END_DATE")
     private LocalDate endDate;
     @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS")
+    @Column(name = "STATUS_RESERVATION")
     private StatusReservation statusReservation;
 
     @ManyToOne
