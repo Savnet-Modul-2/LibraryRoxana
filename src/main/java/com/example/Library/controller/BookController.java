@@ -73,6 +73,6 @@ public class BookController {
     @DeleteMapping("/{bookId}")
     public ResponseEntity<?> deleteBook(@PathVariable Long bookId) {
         bookService.removeFromLibrary(bookId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }
