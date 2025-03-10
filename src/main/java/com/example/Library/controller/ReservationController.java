@@ -1,9 +1,6 @@
 package com.example.Library.controller;
 
-import com.example.Library.dto.PaginatedReservationPeriodDto;
-import com.example.Library.dto.PaginatedReservationStatusDto;
-import com.example.Library.dto.ReservationDto;
-import com.example.Library.dto.ReservationStatusDto;
+import com.example.Library.dto.*;
 import com.example.Library.dto.validation.ValidationOrder;
 import com.example.Library.entities.Reservation;
 import com.example.Library.mapper.ReservationMapper;
@@ -31,15 +28,17 @@ public class ReservationController {
         return ResponseEntity.ok(ReservationMapper.toDto(createdReservation));
     }
 
-    @PostMapping("/reservationsByPeriod")
-    public ResponseEntity<?> getReservationsByPeriod(@RequestBody PaginatedReservationPeriodDto reservation) {
-        List<Reservation> reservationPageable = reservationService.getReservationsByPeriod(reservation);
+    @PostMapping("/reservationsByPeriod/{libraryId}")
+    public ResponseEntity<?> getReservationsByPeriod(@PathVariable Long libraryId,
+                                                     @RequestBody ReservationSearchDto reservation) {
+        List<Reservation> reservationPageable = reservationService.getReservationsByPeriod(reservation, libraryId);
         return ResponseEntity.ok(ReservationMapper.toDtoList(reservationPageable));
     }
 
-    @PostMapping("/reservationsByStatus")
-    public ResponseEntity<?> getReservationsByStatus(@RequestBody PaginatedReservationStatusDto reservation) {
-        List<Reservation> reservationPageable = reservationService.getReservationsByStatus(reservation);
+    @PostMapping("/reservationsByStatus/{userId}")
+    public ResponseEntity<?> getReservationsByStatus(@PathVariable Long userId,
+                                                     @RequestBody ReservationSearchDto reservation) {
+        List<Reservation> reservationPageable = reservationService.getReservationsByStatus(reservation, userId);
         return ResponseEntity.ok(ReservationMapper.toDtoList(reservationPageable));
     }
 

@@ -34,35 +34,35 @@ public class ReservationScheduler {
         reservationRepository.saveAll(expiredReservations);
     }
 
-    @Scheduled(cron = "* * 10 * * *")
-    public void markDelayedReservations() {
-        LocalDate yesterday = LocalDate.now().minusDays(1);
-
-        List<Reservation> expiredReservations = reservationRepository
-                .findByStatusReservationAndEndDate(StatusReservation.IN_PROGRESS, yesterday)
-                .stream()
-                .peek(reservation -> reservation.setStatusReservation(StatusReservation.DELAYED))
-                .toList();
-
-        reservationRepository.saveAll(expiredReservations);
-
-        expiredReservations.forEach(reservation -> {
-            String userEmail = reservation.getUser().getEmail();
-            String librarianEmail = reservation.getExemplary().getBook().getLibrary().getLibrarian().getEmail();
-            String userPhone = reservation.getUser().getPhoneNumber();
-            String bookTitle = reservation.getExemplary().getBook().getTitle();
-
-            String userSubject = "Book return";
-            String userText = " You need to return the book '" + bookTitle +
-                    "'. Please bring it back as soon as possible.";
-            emailService.sendEmail(userEmail, userSubject, userText);
-
-            String librarianSubject = "Unreturned Book!";
-            String librarianText = "The user " + reservation.getUser().getFirstName() + " "
-                    + reservation.getUser().getLastName() +
-                    " (Phone number: " + userPhone + ") has not returned the  '" + bookTitle +
-                    "' on. Please contact them.";
-            emailService.sendEmail(librarianEmail, librarianSubject, librarianText);
-        });
-    }
+//    @Scheduled(cron = "* * 10 * * *")
+//    public void markDelayedReservations() {
+//        LocalDate yesterday = LocalDate.now().minusDays(1);
+//
+//        List<Reservation> expiredReservations = reservationRepository
+//                .findByStatusReservationAndEndDate(StatusReservation.IN_PROGRESS, yesterday)
+//                .stream()
+//                .peek(reservation -> reservation.setStatusReservation(StatusReservation.DELAYED))
+//                .toList();
+//
+//        reservationRepository.saveAll(expiredReservations);
+//
+//        expiredReservations.forEach(reservation -> {
+//            String userEmail = reservation.getUser().getEmail();
+//            String librarianEmail = reservation.getExemplary().getBook().getLibrary().getLibrarian().getEmail();
+//            String userPhone = reservation.getUser().getPhoneNumber();
+//            String bookTitle = reservation.getExemplary().getBook().getTitle();
+//
+//            String userSubject = "Book return";
+//            String userText = " You need to return the book '" + bookTitle +
+//                    "'. Please bring it back as soon as possible.";
+//            emailService.sendEmail(userEmail, userSubject, userText);
+//
+//            String librarianSubject = "Unreturned Book!";
+//            String librarianText = "The user " + reservation.getUser().getFirstName() + " "
+//                    + reservation.getUser().getLastName() +
+//                    " (Phone number: " + userPhone + ") has not returned the  '" + bookTitle +
+//                    "' on. Please contact them.";
+//            emailService.sendEmail(librarianEmail, librarianSubject, librarianText);
+//        });
+//    }
 }

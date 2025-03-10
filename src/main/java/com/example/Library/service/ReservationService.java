@@ -1,7 +1,6 @@
 package com.example.Library.service;
 
-import com.example.Library.dto.PaginatedReservationPeriodDto;
-import com.example.Library.dto.PaginatedReservationStatusDto;
+import com.example.Library.dto.ReservationSearchDto;
 import com.example.Library.entities.*;
 import com.example.Library.repository.*;
 import jakarta.persistence.EntityNotFoundException;
@@ -47,15 +46,15 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
-    public List<Reservation> getReservationsByPeriod(PaginatedReservationPeriodDto paginatedReservationPeriodDto) {
-        Pageable pageable = PageRequest.of(paginatedReservationPeriodDto.getPage(), paginatedReservationPeriodDto.getSize(), Sort.by(Sort.Direction.ASC, "startDate"));
-        Page<Reservation> reservations = reservationRepository.findByStartDateBetween(paginatedReservationPeriodDto.getStartDate(), paginatedReservationPeriodDto.getEndDate(), pageable);
+    public List<Reservation> getReservationsByPeriod(ReservationSearchDto searchDto, Long libraryId) {
+        Pageable pageable = PageRequest.of(searchDto.getPage(), searchDto.getSize(), Sort.by(Sort.Direction.ASC, "startDate"));
+        Page<Reservation> reservations = reservationRepository.searchReservationsByFilterLibrary(libraryId, searchDto.getStatuses(), searchDto.getStartDate(), searchDto.getEndDate(), pageable);
         return reservations.getContent();
     }
 
-    public List<Reservation> getReservationsByStatus(PaginatedReservationStatusDto paginatedReservationStatusDto) {
-        Pageable pageable = PageRequest.of(paginatedReservationStatusDto.getPage(), paginatedReservationStatusDto.getSize(), Sort.by(Sort.Direction.ASC, "statusReservation"));
-        Page<Reservation> reservations = reservationRepository.findByStatusReservation(paginatedReservationStatusDto.getStatusReservation(), pageable);
+    public List<Reservation> getReservationsByStatus(ReservationSearchDto searchDto, Long userId) {
+        Pageable pageable = PageRequest.of(searchDto.getPage(), searchDto.getSize(), Sort.by(Sort.Direction.ASC, "statusReservation"));
+        Page<Reservation> reservations = reservationRepository.searchReservationsByFilterUser(userId, searchDto.getStatuses(), searchDto.getStartDate(), searchDto.getEndDate(), pageable);
         return reservations.getContent();
     }
 
