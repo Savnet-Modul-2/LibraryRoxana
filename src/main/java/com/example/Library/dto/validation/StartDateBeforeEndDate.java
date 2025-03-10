@@ -4,7 +4,7 @@ import com.example.Library.dto.ReservationDto;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class DateValidator implements ConstraintValidator<ValidDate, ReservationDto> {
+public class StartDateBeforeEndDate implements ConstraintValidator<ValidDate, ReservationDto> {
     @Override
     public void initialize(ValidDate validDate) {
     }

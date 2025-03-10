@@ -13,7 +13,7 @@ public class EmailService {
 
     @Async
     public void sendVerificationEmail(String to, String code) {
-        sendEmail(to, "verificare cont bookstore", "Codul tau de verificare este: " + code);
+        sendEmail(to, "Verificare cont bookstore", "Codul tau de verificare este: " + code);
     }
 
     @Async

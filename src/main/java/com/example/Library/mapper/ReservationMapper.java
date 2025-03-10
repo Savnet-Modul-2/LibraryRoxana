@@ -26,6 +26,8 @@ public class ReservationMapper {
     }
 
     public static List<ReservationDto> toDtoList(List<Reservation> reservations) {
-        return reservations.stream().map(ReservationMapper::toDto).toList();
+        return reservations.stream()
+                .map(ReservationMapper::toDto)
+                .toList();
     }
 }

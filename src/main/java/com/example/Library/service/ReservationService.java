@@ -48,14 +48,22 @@ public class ReservationService {
 
     public List<Reservation> getReservationsByPeriod(ReservationSearchDto searchDto, Long libraryId) {
         Pageable pageable = PageRequest.of(searchDto.getPage(), searchDto.getSize(), Sort.by(Sort.Direction.ASC, "startDate"));
-        Page<Reservation> reservations = reservationRepository.searchReservationsByFilterLibrary(libraryId, searchDto.getStatuses(), searchDto.getStartDate(), searchDto.getEndDate(), pageable);
-        return reservations.getContent();
+        return reservationRepository.searchReservationsByFilterLibrary(libraryId,
+                        searchDto.getStatuses(),
+                        searchDto.getStartDate(),
+                        searchDto.getEndDate(),
+                        pageable)
+                .getContent();
     }
 
     public List<Reservation> getReservationsByStatus(ReservationSearchDto searchDto, Long userId) {
         Pageable pageable = PageRequest.of(searchDto.getPage(), searchDto.getSize(), Sort.by(Sort.Direction.ASC, "statusReservation"));
-        Page<Reservation> reservations = reservationRepository.searchReservationsByFilterUser(userId, searchDto.getStatuses(), searchDto.getStartDate(), searchDto.getEndDate(), pageable);
-        return reservations.getContent();
+        return reservationRepository.searchReservationsByFilterUser(userId,
+                        searchDto.getStatuses(),
+                        searchDto.getStartDate(),
+                        searchDto.getEndDate(),
+                        pageable)
+                .getContent();
     }
 
     public Reservation updateReservationStatus(Long reservationId, Long librarianId, StatusReservation newStatus) {

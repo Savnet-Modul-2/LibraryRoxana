@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 
-@Constraint(validatedBy = {DateValidator.class})
+@Constraint(validatedBy = {StartDateBeforeEndDate.class})
 @Target(ElementType.TYPE)
 @Retention(RUNTIME)
 public @interface ValidDate {
