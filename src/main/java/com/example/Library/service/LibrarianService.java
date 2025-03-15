@@ -52,7 +52,7 @@ public class LibrarianService {
         }
 
         Librarian savedLibrarian = librarianRepository.save(librarian);
-        emailService.sendVerificationEmail(librarian.getEmail(), verificationCode);
+        //emailService.sendVerificationEmail(librarian.getEmail(), verificationCode);
 
         return savedLibrarian;
     }

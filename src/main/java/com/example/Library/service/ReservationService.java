@@ -1,10 +1,17 @@
 package com.example.Library.service;
 
+import com.example.Library.dto.ReservationSearchDto;
 import com.example.Library.entities.*;
 import com.example.Library.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ReservationService {
@@ -37,6 +44,26 @@ public class ReservationService {
         reservation.setExemplary(exemplary);
 
         return reservationRepository.save(reservation);
+    }
+
+    public List<Reservation> getReservationsByPeriod(ReservationSearchDto searchDto, Long libraryId) {
+        Pageable pageable = PageRequest.of(searchDto.getPage(), searchDto.getSize(), Sort.by(Sort.Direction.ASC, "startDate"));
+        return reservationRepository.searchReservationsByFilterLibrary(libraryId,
+                        searchDto.getStatuses(),
+                        searchDto.getStartDate(),
+                        searchDto.getEndDate(),
+                        pageable)
+                .getContent();
+    }
+
+    public List<Reservation> getReservationsByStatus(ReservationSearchDto searchDto, Long userId) {
+        Pageable pageable = PageRequest.of(searchDto.getPage(), searchDto.getSize(), Sort.by(Sort.Direction.ASC, "statusReservation"));
+        return reservationRepository.searchReservationsByFilterUser(userId,
+                        searchDto.getStatuses(),
+                        searchDto.getStartDate(),
+                        searchDto.getEndDate(),
+                        pageable)
+                .getContent();
     }
 
     public Reservation updateReservationStatus(Long reservationId, Long librarianId, StatusReservation newStatus) {

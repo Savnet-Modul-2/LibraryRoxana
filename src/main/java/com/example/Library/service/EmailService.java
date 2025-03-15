@@ -3,6 +3,7 @@ package com.example.Library.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,19 +11,12 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Async
     public void sendVerificationEmail(String to, String code) {
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(to);
-            message.setSubject("Verificare cont BookStore");
-            message.setText("Codul tau de verificare este: " + code);
-            mailSender.send(message);
-        } catch (Exception e) {
-            System.out.println("Eroare la trimiterea emailului: " + e.getMessage());
-            throw new RuntimeException("Failed to send verification email", e);
-        }
+        sendEmail(to, "Verificare cont bookstore", "Codul tau de verificare este: " + code);
     }
 
+    @Async
     public void sendEmail(String to, String subject, String text) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
