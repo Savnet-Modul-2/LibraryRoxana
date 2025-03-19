@@ -8,6 +8,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +24,7 @@ public class LibrarianService {
     @Autowired
     private LibraryRepository libraryRepository;
 
+    @Transactional
     public Librarian create(Librarian librarian) {
         String sha256Hex = DigestUtils.sha256Hex(librarian.getPassword()).toUpperCase();
         librarian.setPassword(sha256Hex);
@@ -65,6 +67,7 @@ public class LibrarianService {
         return librarianRepository.findAll();
     }
 
+    @Transactional
     public Librarian update(Librarian librarian, Long id) {
         return librarianRepository.findById(id).map(librarian1 -> {
             librarian1.setName(librarian.getName());
@@ -84,10 +87,12 @@ public class LibrarianService {
 
     }
 
+    @Transactional
     public void delete(Long librarianId) {
         librarianRepository.deleteById(librarianId);
     }
 
+    @Transactional
     public Librarian verify(String email, String verificationCode) {
         Librarian librarian = librarianRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Librarian not found"));

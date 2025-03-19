@@ -10,6 +10,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class ExemplaryService {
     @Autowired
     private BookRepository bookRepository;
 
+    @Transactional
     public List<Exemplary> create(String publisher, Integer maxReservationDays, Long bookId, Integer count) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book not found with id: " + bookId));
@@ -49,6 +51,7 @@ public class ExemplaryService {
                 .toList();
     }
 
+    @Transactional
     public void delete(Long exemplaryId) {
         exemplaryRepository.deleteById(exemplaryId);
     }

@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +22,7 @@ public class BookService {
     @Autowired
     private LibraryRepository libraryRepository;
 
+    @Transactional
     public Book create(Book book, Long libraryId) {
         Library library = libraryRepository.findById(libraryId)
                 .orElseThrow(() -> new EntityNotFoundException("Library not found with id: " + libraryId));
@@ -46,6 +48,7 @@ public class BookService {
         return bookRepository.findBooks(author, title, pageable);
     }
 
+    @Transactional
     public Book update(Book updatedBook, Long id) {
         return bookRepository.findById(id).map(book -> {
             book.setIsbn(updatedBook.getIsbn());
@@ -60,6 +63,7 @@ public class BookService {
         }).orElseThrow(EntityNotFoundException::new);
     }
 
+    @Transactional
     public void removeFromLibrary(Long bookId) {
         Book book = bookRepository.findById(bookId)
                 .orElseThrow(() -> new EntityNotFoundException("Book not found with id: " + bookId));

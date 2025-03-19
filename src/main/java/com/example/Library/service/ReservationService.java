@@ -10,7 +10,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -29,6 +31,7 @@ public class ReservationService {
     @Autowired
     private LibrarianRepository librarianRepository;
 
+    @Transactional
     public Reservation create(Reservation reservation, Long userId, Long bookId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
@@ -42,6 +45,7 @@ public class ReservationService {
         reservation.setStatusReservation(StatusReservation.PENDING);
         reservation.setUser(user);
         reservation.setExemplary(exemplary);
+        exemplary.setUpdateTime(LocalDate.now());
 
         return reservationRepository.save(reservation);
     }
@@ -66,6 +70,7 @@ public class ReservationService {
                 .getContent();
     }
 
+    @Transactional
     public Reservation updateReservationStatus(Long reservationId, Long librarianId, StatusReservation newStatus) {
         Librarian librarian = librarianRepository.findById(librarianId)
                 .orElseThrow(() -> new EntityNotFoundException("Librarian not found"));

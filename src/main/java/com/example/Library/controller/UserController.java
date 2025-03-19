@@ -69,4 +69,10 @@ public class UserController {
         User user = userService.login(userToLogin.getEmail(), userToLogin.getPassword());
         return ResponseEntity.ok(UserMapper.toDto(user));
     }
+
+    @PostMapping("/resend-code/{userId}")
+    public ResponseEntity<?> resendVerification(@PathVariable Long userId) {
+       User user= userService.resendVerificationEmail(userId);
+        return ResponseEntity.ok(UserMapper.toDto(user));
+    }
 }
