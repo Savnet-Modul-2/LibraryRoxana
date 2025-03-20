@@ -12,7 +12,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = {FutureOrPresentDateValidator.class})
 @Target(ElementType.FIELD)
 @Retention(RUNTIME)
-public @interface DateNotInThePast {
+public @interface FutureOrPresentDate {
     String message() default "The date must not be in the past";
 
     Class<?>[] groups() default {};

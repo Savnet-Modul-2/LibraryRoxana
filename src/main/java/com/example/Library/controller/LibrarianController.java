@@ -4,6 +4,7 @@ import com.example.Library.dto.LibrarianDto;
 import com.example.Library.dto.validation.LoginValidation;
 import com.example.Library.dto.validation.ValidationOrder;
 import com.example.Library.entities.Librarian;
+import com.example.Library.entities.User;
 import com.example.Library.mapper.LibrarianMapper;
 import com.example.Library.service.LibrarianService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,5 +70,11 @@ public class LibrarianController {
         Librarian librarianToLogin = LibrarianMapper.toEntity(librarianDto);
         Librarian librarian = librarianService.login(librarianToLogin.getEmail(), librarianToLogin.getPassword());
         return ResponseEntity.ok(LibrarianMapper.toDto(librarian));
+    }
+
+    @PostMapping("/resend-code/{userId}")
+    public ResponseEntity<?> resendVerification(@PathVariable Long librarianId) {
+        Librarian librarian = librarianService.resendVerificationEmail(librarianId);
+        return ResponseEntity.ok().build();
     }
 }

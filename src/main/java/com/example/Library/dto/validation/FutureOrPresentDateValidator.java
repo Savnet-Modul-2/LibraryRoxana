@@ -5,9 +5,9 @@ import jakarta.validation.ConstraintValidatorContext;
 
 import java.time.LocalDate;
 
-public class FutureOrPresentDateValidator implements ConstraintValidator<DateNotInThePast, LocalDate> {
+public class FutureOrPresentDateValidator implements ConstraintValidator<FutureOrPresentDate, LocalDate> {
     @Override
-    public void initialize(DateNotInThePast dateNotInThePast) {
+    public void initialize(FutureOrPresentDate futureOrPresentDate) {
     }
 
     @Override

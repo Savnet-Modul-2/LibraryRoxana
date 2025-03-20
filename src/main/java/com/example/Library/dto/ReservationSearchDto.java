@@ -2,7 +2,7 @@ package com.example.Library.dto;
 
 import com.example.Library.dto.validation.AdvancedValidation;
 import com.example.Library.dto.validation.BasicValidation;
-import com.example.Library.dto.validation.DateNotInThePast;
+import com.example.Library.dto.validation.FutureOrPresentDate;
 import com.example.Library.dto.validation.ValidDate;
 import com.example.Library.entities.StatusReservation;
 import jakarta.validation.constraints.NotNull;
@@ -17,11 +17,11 @@ import java.util.List;
 @ValidDate(groups = AdvancedValidation.class)
 public class ReservationSearchDto {
     @NotNull(groups = BasicValidation.class)
-    @DateNotInThePast(groups = AdvancedValidation.class)
+    @FutureOrPresentDate(groups = AdvancedValidation.class)
     private LocalDate startDate;
 
     @NotNull(groups = BasicValidation.class)
-    @DateNotInThePast(groups = AdvancedValidation.class)
+    @FutureOrPresentDate(groups = AdvancedValidation.class)
     private LocalDate endDate;
 
     private Integer page;

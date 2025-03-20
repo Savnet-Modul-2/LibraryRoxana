@@ -2,6 +2,7 @@ package com.example.Library.service;
 
 import com.example.Library.entities.Librarian;
 import com.example.Library.entities.Library;
+import com.example.Library.entities.User;
 import com.example.Library.repository.LibrarianRepository;
 import com.example.Library.repository.LibraryRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -116,5 +117,29 @@ public class LibrarianService {
         String sha256Hex = DigestUtils.sha256Hex(password).toUpperCase();
         return librarianRepository.findByEmailAndPasswordAndVerifiedAccountTrue(email, sha256Hex)
                 .orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional
+    public Librarian resendVerificationEmail(Long librarianId) {
+        Librarian librarian = librarianRepository.findById(librarianId)
+                .orElseThrow(() -> new RuntimeException("Librarian not found"));
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if (librarian.getVerificationCodeExpiration() != null && now.isBefore(librarian.getVerificationCodeExpiration())) {
+            long minutesLeft = java.time.Duration.between(now, librarian.getVerificationCodeExpiration()).toMinutes();
+
+            if (minutesLeft >= 1) {
+                emailService.sendVerificationEmail(librarian.getEmail(), librarian.getVerificationCode());
+                return librarian;
+            }
+        }
+        String newVerificationCode = String.valueOf(new Random().nextInt(100000, 999999));
+        librarian.setVerificationCode(newVerificationCode);
+        librarian.setVerificationCodeExpiration(now.plusMinutes(10));
+
+        emailService.sendVerificationEmail(librarian.getEmail(), newVerificationCode);
+
+        return librarianRepository.save(librarian);
     }
 }
