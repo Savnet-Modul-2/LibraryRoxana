@@ -34,4 +34,8 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "exemplary_id", nullable = false)
     private Exemplary exemplary;
+
+    @Version
+    @Column(name = "VERSION")
+    private Integer version;
 }
