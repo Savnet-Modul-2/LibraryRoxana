@@ -30,7 +30,7 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}")
-    public ResponseEntity<BookDto> getById(@PathVariable Long bookId) {
+    public ResponseEntity<BookDto> getById(@PathVariable Long bookId) {//in cale
         Book foundBook = bookService.getById(bookId);
         return ResponseEntity.ok(BookMapper.toDto(foundBook));
     }
@@ -38,7 +38,7 @@ public class BookController {
     @GetMapping
     public ResponseEntity<List<BookDto>> getAllBooks(
             @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size) {
+            @RequestParam(required = false) Integer size) {//tot in cale dar ii si specifici gen ala cu ?
 
         List<BookDto> books = bookService.findAllBooks(page, size)
                 .stream()
