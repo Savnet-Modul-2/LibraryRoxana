@@ -11,6 +11,7 @@ public class ExemplaryMapper {
         Exemplary exemplary = new Exemplary();
         exemplary.setPublisher(exemplaryDto.getPublisher());
         exemplary.setMaxReservationDays(exemplaryDto.getMaxReservationDays());
+        exemplary.setBook(BookMapper.toEntity(exemplaryDto.getBook()));
         return exemplary;
     }
 
@@ -19,6 +20,7 @@ public class ExemplaryMapper {
         exemplaryDto.setId(exemplary.getId());
         exemplaryDto.setPublisher(exemplary.getPublisher());
         exemplaryDto.setMaxReservationDays(exemplary.getMaxReservationDays());
+        exemplaryDto.setBook(BookMapper.toDto(exemplary.getBook()));
         return exemplaryDto;
     }
 

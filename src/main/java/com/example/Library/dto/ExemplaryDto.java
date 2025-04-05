@@ -15,4 +15,6 @@ public class ExemplaryDto {
 
     @NotNull(groups = BasicValidation.class)
     private Integer maxReservationDays;
+
+    private BookDto book;
 }

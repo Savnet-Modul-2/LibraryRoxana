@@ -34,6 +34,8 @@ public class BookDto {
 
     private BookCategory bookCategory;
 
+    private LibraryDto library;
+
     @NotNull(groups = BasicValidation.class)
     private String language;
 

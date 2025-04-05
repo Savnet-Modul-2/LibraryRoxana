@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -48,4 +50,11 @@ public class User {
 
     @Column(name = "VERIFICATION_CODE_EXPIRATION")
     private LocalDateTime verificationCodeExpiration;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
+            fetch = FetchType.LAZY,
+            orphanRemoval = true,
+            mappedBy = "user")
+    private List<Reservation> reservations = new ArrayList<>();
+
 }

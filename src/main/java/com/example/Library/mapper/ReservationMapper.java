@@ -11,6 +11,8 @@ public class ReservationMapper {
         reservation.setStartDate(reservationDTO.getStartDate());
         reservation.setEndDate(reservationDTO.getEndDate());
         reservation.setStatusReservation(reservation.getStatusReservation());
+        reservation.setExemplary(ExemplaryMapper.toEntity(reservationDTO.getExemplary()));
+        reservation.setUser(UserMapper.toEntity(reservationDTO.getUser()));
         return reservation;
     }
 
