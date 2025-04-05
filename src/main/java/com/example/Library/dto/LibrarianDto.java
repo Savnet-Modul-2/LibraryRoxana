@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class LibrarianDto {
-    @NotNull(groups = BasicValidation.class)
     private Long id;
 
     @NotNull(groups = BasicValidation.class)

@@ -13,16 +13,14 @@ public class LibraryMapper {
         }
 
         Library library = new Library();
+
+        if (libraryDto.getId() != null && libraryDto.getName() == null) {
+            library.setId(libraryDto.getId());
+            return library;
+        }
         library.setName(libraryDto.getName());
         library.setAddress(libraryDto.getAddress());
         library.setPhoneNumber(libraryDto.getPhoneNumber());
-
-        if (libraryDto.getBooks() != null) {
-            List<Book> books = libraryDto.getBooks().stream()
-                    .map(BookMapper::toEntity)
-                    .toList();
-            library.setBooks(books);
-        }
 
         return library;
     }
@@ -37,12 +35,6 @@ public class LibraryMapper {
         libraryDto.setName(library.getName());
         libraryDto.setAddress(library.getAddress());
         libraryDto.setPhoneNumber(library.getPhoneNumber());
-
-        if (library.getBooks() != null) {
-            libraryDto.setBooks(library.getBooks().stream()
-                    .map(BookMapper::toDto)
-                    .toList());
-        }
 
         return libraryDto;
     }

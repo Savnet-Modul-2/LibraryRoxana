@@ -24,5 +24,4 @@ public class LibraryDto {
     @DigitsOnly(groups = AdvancedValidation.class)
     private Integer phoneNumber;
 
-    private List<BookDto> books;
 }

@@ -39,5 +39,4 @@ public class BookDto {
     @NotNull(groups = BasicValidation.class)
     private String language;
 
-    private List<ExemplaryDto> exemplars;
 }
