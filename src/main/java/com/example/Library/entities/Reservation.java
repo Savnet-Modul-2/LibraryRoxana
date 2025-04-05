@@ -23,6 +23,7 @@ public class Reservation {
 
     @Column(name = "END_DATE")
     private LocalDate endDate;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS_RESERVATION")
     private StatusReservation statusReservation;
@@ -34,4 +35,8 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "exemplary_id", nullable = false)
     private Exemplary exemplary;
+
+    @Version
+    @Column(name = "VERSION")
+    private Integer version;
 }

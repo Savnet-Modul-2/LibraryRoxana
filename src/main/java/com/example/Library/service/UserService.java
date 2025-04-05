@@ -6,6 +6,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +19,7 @@ public class UserService {
     @Autowired
     private EmailService emailService;
 
+    @Transactional
     public User create(User user) {
         String sha256Hex = DigestUtils.sha256Hex(user.getPassword()).toUpperCase();
         user.setPassword(sha256Hex);
@@ -40,6 +42,7 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional
     public User update(User user, Long id) {
         return userRepository.findById(id).map(userMap ->
         {
@@ -64,10 +67,12 @@ public class UserService {
         }).orElseThrow(() -> new EntityNotFoundException("User not found with id:" + id));
     }
 
+    @Transactional
     public void delete(Long userId) {
         userRepository.deleteById(userId);
     }
 
+    @Transactional
     public User verify(String email, String verificationCode) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -92,5 +97,29 @@ public class UserService {
 
         return userRepository.findByEmailAndPasswordAndVerifiedAccountTrue(email, sha256Hex)
                 .orElseThrow(() -> new EntityNotFoundException("User not found or incorrect password."));
+    }
+
+    @Transactional
+    public User resendVerificationEmail(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        LocalDateTime now = LocalDateTime.now();
+
+        if (user.getVerificationCodeExpiration() != null && now.isBefore(user.getVerificationCodeExpiration())) {
+            long minutesLeft = java.time.Duration.between(now, user.getVerificationCodeExpiration()).toMinutes();
+
+            if (minutesLeft >= 1) {
+                emailService.sendVerificationEmail(user.getEmail(), user.getVerificationCode());
+                return user;
+            }
+        }
+        String newVerificationCode = String.valueOf(new Random().nextInt(100000, 999999));
+        user.setVerificationCode(newVerificationCode);
+        user.setVerificationCodeExpiration(now.plusMinutes(10));
+
+        emailService.sendVerificationEmail(user.getEmail(), newVerificationCode);
+
+        return userRepository.save(user);
     }
 }

@@ -10,7 +10,9 @@ import java.util.concurrent.Executor;
 @Configuration
 @EnableAsync
 public class SpringAsyncConfig implements AsyncConfigurer {
-
+    //folosim Async -ca o metoda cu Async in alta metoda
+    //porneste thread uri si le executa
+    //sa fie mai rapid
     @Override
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
