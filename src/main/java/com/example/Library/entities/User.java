@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -48,4 +50,16 @@ public class User {
 
     @Column(name = "VERIFICATION_CODE_EXPIRATION")
     private LocalDateTime verificationCodeExpiration;
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(name = "USER_LIBRARY", schema = "public",
+            joinColumns = @JoinColumn(name = "user_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "library_id", nullable = false))
+    private List<Library> libraries=new ArrayList<>();
+
+    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE},
+            orphanRemoval = true)
+    @JoinColumn(name = "review_id", referencedColumnName = "id")
+    private Review review;
+
 }

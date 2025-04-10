@@ -35,6 +35,9 @@ public class Library {
             mappedBy = "library")
     private List<Book> books = new ArrayList<>();
 
+    @ManyToMany(mappedBy = "libraries", fetch = FetchType.EAGER)
+    private List<User> users;
+
     public void addBook(Book book) {
         books.add(book);
         book.setLibrary(this);

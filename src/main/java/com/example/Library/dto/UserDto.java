@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -45,4 +46,8 @@ public class UserDto {
     private Boolean verifiedAccount = false;
     private String verificationCode;
     private LocalDateTime verificationCodeExpiration;
+
+    private List<LibrarySimpleDto> libraries;
+
+    private ReviewSimpleDto review;
 }

@@ -1,6 +1,9 @@
 package com.example.Library.service;
 
 import com.example.Library.entities.User;
+import com.example.Library.repository.BookRepository;
+import com.example.Library.repository.LibraryRepository;
+import com.example.Library.repository.ReviewRepository;
 import com.example.Library.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +19,12 @@ import java.util.Random;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private LibraryRepository libraryRepository;
+    @Autowired
+    private ReviewRepository reviewRepository;
+    @Autowired
+    private BookRepository bookRepository;
     @Autowired
     private EmailService emailService;
 
@@ -33,6 +42,7 @@ public class UserService {
         emailService.sendVerificationEmail(user.getEmail(), verificationCode);
         return savedUser;
     }
+
 
     public User getById(Long id) {
         return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
