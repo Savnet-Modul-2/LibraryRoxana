@@ -38,4 +38,6 @@ public class BookDto {
     private String language;
 
     private List<ExemplaryDto> exemplars;
+
+    private List<ReviewSimpleDto> reviewSimpleDtoList;
 }

@@ -50,8 +50,18 @@ public class Book {
             mappedBy = "book")
     private List<Exemplary> exemplars = new ArrayList<>();
 
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
+            fetch = FetchType.LAZY,
+            orphanRemoval = true,
+            mappedBy = "book")
+    private List<Review> reviews = new ArrayList<>();
+
     public void addExemplary(Exemplary exemplary) {
         exemplars.add(exemplary);
         exemplary.setBook(this);
+    }
+    public void addReview(Review review) {
+        reviews.add(review);
+        review.setBook(this);
     }
 }
