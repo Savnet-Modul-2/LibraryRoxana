@@ -1,9 +1,13 @@
 package com.example.Library.service;
 
+import com.example.Library.entities.Library;
 import com.example.Library.entities.User;
+import com.example.Library.repository.LibraryRepository;
 import com.example.Library.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +20,8 @@ import java.util.Random;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private LibraryRepository libraryRepository;
     @Autowired
     private EmailService emailService;
 
@@ -33,6 +39,32 @@ public class UserService {
         emailService.sendVerificationEmail(user.getEmail(), verificationCode);
         return savedUser;
     }
+
+    @Transactional
+    public User addLibraryToUser(Long libraryId,Long userId){
+        User user=userRepository.findById(userId).orElseThrow(()->new EntityNotFoundException("User not found"));
+        Library library=libraryRepository.findById(libraryId).orElseThrow(()->new EntityNotFoundException("Library not found"));
+        user.addLibrary(library);
+        library.addUser(user);
+        userRepository.save(user);
+        libraryRepository.save(library);
+        return user;
+    }
+    @Transactional
+    public User removeLibraryFromUser(Long libraryId,Long userId){
+        User user=userRepository.findById(userId).orElseThrow(()->new EntityNotFoundException("User not found"));
+        Library library=libraryRepository.findById(libraryId).orElseThrow(()->new EntityNotFoundException("Library not found"));
+        user.removeLibrary(library);
+        library.removeUser(user);
+        userRepository.save(user);
+        libraryRepository.save(library);
+        return user;
+    }
+    public Page<Library> findLibraries(Long userId,String name ,Pageable pageable) {
+        User user=userRepository.findById(userId).orElseThrow(()->new EntityNotFoundException("User not found"));
+        return userRepository.findLibraries(userId,name, pageable);
+    }
+
 
     public User getById(Long id) {
         return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);

@@ -1,6 +1,7 @@
 package com.example.Library.mapper;
 
 import com.example.Library.dto.LibraryDto;
+import com.example.Library.dto.LibrarySimpleDto;
 import com.example.Library.entities.Book;
 import com.example.Library.entities.Library;
 
@@ -44,6 +45,31 @@ public class LibraryMapper {
                     .toList());
         }
 
+        return libraryDto;
+    }
+    public static Library toSimpleEntity(LibrarySimpleDto libraryDto) {
+        if (libraryDto == null) {
+            return null;
+        }
+
+        Library library = new Library();
+        library.setName(libraryDto.getName());
+        library.setAddress(libraryDto.getAddress());
+        library.setPhoneNumber(libraryDto.getPhoneNumber());
+
+        return library;
+    }
+
+    public static LibrarySimpleDto toSimpleDto(Library library) {
+        if (library == null) {
+            return null;
+        }
+
+        LibrarySimpleDto libraryDto = new LibrarySimpleDto();
+        libraryDto.setId(library.getId());
+        libraryDto.setName(library.getName());
+        libraryDto.setAddress(library.getAddress());
+        libraryDto.setPhoneNumber(library.getPhoneNumber());
         return libraryDto;
     }
 }

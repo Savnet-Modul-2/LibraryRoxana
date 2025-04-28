@@ -25,4 +25,5 @@ public class LibraryDto {
     private Integer phoneNumber;
 
     private List<BookDto> books;
+    private List<UserSimpleDto> users;
 }

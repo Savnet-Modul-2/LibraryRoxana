@@ -1,12 +1,17 @@
 package com.example.Library.controller;
 
+import com.example.Library.dto.LibraryDto;
 import com.example.Library.dto.UserDto;
 import com.example.Library.dto.validation.LoginValidation;
 import com.example.Library.dto.validation.ValidationOrder;
+import com.example.Library.entities.Library;
 import com.example.Library.entities.User;
+import com.example.Library.mapper.LibraryMapper;
 import com.example.Library.mapper.UserMapper;
 import com.example.Library.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +31,36 @@ public class UserController {
         UserDto createdUserDTO = UserMapper.toDto(createdUser);
         return ResponseEntity.ok(createdUserDTO);
     }
+    @PostMapping("/addLibraryToUser/{libraryId}/{userId}")
+    public ResponseEntity<?> addLibraryToUser(@PathVariable Long libraryId,
+                                              @PathVariable Long userId){
+        User user=userService.addLibraryToUser(libraryId,userId);
+        UserDto userDto=UserMapper.toDto(user);
+        return ResponseEntity.ok(userDto);
+    }
+    @PostMapping("/removeLibraryFromUser/{libraryId}/{userId}")
+    public ResponseEntity<?> removeLibraryFromUser(@PathVariable Long libraryId,
+                                              @PathVariable Long userId){
+        User user=userService.removeLibraryFromUser(libraryId,userId);
+        UserDto userDto=UserMapper.toDto(user);
+        return ResponseEntity.ok(userDto);
+    }
 
+    @GetMapping("/paginated-search/{userId}")
+    public ResponseEntity<?> findLibrariesPaginated(
+            @PathVariable Long userId,
+            @RequestParam(required = false) String name,
+            @RequestParam(name = "pageSize", required = false) Integer size,
+            @RequestParam(name = "pageNumber", required = false) Integer page) {
+
+        int pageSize = (size != null) ? size : 10;
+        int pageNumber = (page != null) ? page : 0;
+
+        Page<Library> foundLibraries = userService.findLibraries(userId,name, PageRequest.of(pageNumber, pageSize));
+        Page<LibraryDto> libraryDtos = foundLibraries.map(LibraryMapper::toDto);
+
+        return ResponseEntity.ok(libraryDtos);
+    }
     @GetMapping("/{userId}")
     public ResponseEntity<UserDto> getById(@PathVariable Long userId) {
         User foundUser = userService.getById(userId);

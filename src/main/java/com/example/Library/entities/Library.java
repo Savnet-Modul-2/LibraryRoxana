@@ -34,6 +34,14 @@ public class Library {
             orphanRemoval = true,
             mappedBy = "library")
     private List<Book> books = new ArrayList<>();
+    @ManyToMany(mappedBy = "favoriteLibraries", fetch = FetchType.EAGER)
+    private List<User> users = new ArrayList<>();
+    public void addUser(User user) {
+        users.add(user);
+    }
+    public void removeUser(User user) {
+        users.remove(user);
+    }
 
     public void addBook(Book book) {
         books.add(book);

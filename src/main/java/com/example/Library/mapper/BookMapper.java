@@ -1,7 +1,11 @@
 package com.example.Library.mapper;
 
 import com.example.Library.dto.BookDto;
+import com.example.Library.dto.BookSimpleDto;
 import com.example.Library.entities.Book;
+import com.example.Library.entities.Review;
+
+import java.util.List;
 
 public class BookMapper {
     public static Book toEntity(BookDto bookDto) {
@@ -13,6 +17,14 @@ public class BookMapper {
         book.setNrOfPages(bookDto.getNrOfPages());
         book.setBookCategory(bookDto.getBookCategory());
         book.setLanguage(bookDto.getLanguage());
+        book.setAverageReviews(bookDto.getAverage());
+
+        if (bookDto.getReviewDtos() != null) {
+            List<Review> reviews = bookDto.getReviewDtos().stream()
+                    .map(ReviewMapper::toSimpleEntity)
+                    .toList();
+            book.setReviews(reviews);
+        }
         return book;
     }
 
@@ -26,6 +38,19 @@ public class BookMapper {
         bookDto.setNrOfPages(book.getNrOfPages());
         bookDto.setBookCategory(book.getBookCategory());
         bookDto.setLanguage(book.getLanguage());
+        bookDto.setAverage(book.getAverageReviews());
+
+        if (book.getReviews() != null) {
+            bookDto.setReviewDtos(book.getReviews().stream()
+                    .map(ReviewMapper::toSimpleDto)
+                    .toList());
+        }
         return bookDto;
+    }
+
+    public static BookSimpleDto toSimpleDto(Book book){
+        BookSimpleDto bookSimpleDto=new BookSimpleDto();
+        bookSimpleDto.setId(book.getId());
+        return bookSimpleDto;
     }
 }
