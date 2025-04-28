@@ -4,11 +4,13 @@ import com.example.Library.dto.validation.AdvancedValidation;
 import com.example.Library.dto.validation.BasicValidation;
 import com.example.Library.dto.validation.PastDate;
 import com.example.Library.entities.BookCategory;
+import com.example.Library.service.TagService;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -40,6 +42,11 @@ public class BookDto {
     private List<ExemplaryDto> exemplars;
 
     private List<ReviewSimpleDto> reviewDtos;
+
     private Integer average;
+
+    private List<UserSimpleDto> users=new ArrayList<>();
+
+    private List<TagSimpleDto> tags=new ArrayList<>();
 
 }

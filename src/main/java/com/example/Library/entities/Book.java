@@ -57,19 +57,46 @@ public class Book {
     private List<Review> reviews = new ArrayList<>();
 
     @Column(name = "AVERAGE")
-    private Integer averageReviews=0;
+    private Integer averageReviews = 0;
 
+    @ManyToMany(mappedBy = "favoriteBooks", fetch = FetchType.EAGER)
+    private List<User> users = new ArrayList<>();
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
+            fetch = FetchType.LAZY,
+            orphanRemoval = true,
+            mappedBy = "book")
+    private List<Tag> tags = new ArrayList<>();
+
+    public void addTag(Tag tag){
+        tags.add(tag);
+        tag.setBook(this);
+    }
+    public void removeTag(Tag tag){
+        tags.remove(tag);
+        tag.setBook(null);
+    }
+
+    public void addUser(User user) {
+        users.add(user);
+    }
+    public void removeUser(User user) {
+        users.remove(user);
+    }
     public void addReview(Review review) {
         reviews.add(review);
         review.setBook(this);
     }
+
     public void removeReview(Review review) {
         reviews.remove(review);
     }
+
     public void addExemplary(Exemplary exemplary) {
         exemplars.add(exemplary);
         exemplary.setBook(this);
     }
+
     public void averageBook() {
         if (reviews == null || reviews.isEmpty()) {
             this.averageReviews = 0;
