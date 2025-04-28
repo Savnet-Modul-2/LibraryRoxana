@@ -1,7 +1,9 @@
 package com.example.Library.service;
 
+import com.example.Library.entities.Book;
 import com.example.Library.entities.Library;
 import com.example.Library.entities.User;
+import com.example.Library.repository.BookRepository;
 import com.example.Library.repository.LibraryRepository;
 import com.example.Library.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -22,6 +24,8 @@ public class UserService {
     private UserRepository userRepository;
     @Autowired
     private LibraryRepository libraryRepository;
+    @Autowired
+    private BookRepository bookRepository;
     @Autowired
     private EmailService emailService;
 
@@ -49,6 +53,30 @@ public class UserService {
         userRepository.save(user);
         libraryRepository.save(library);
         return user;
+    }
+    @Transactional
+    public User addBookToWishList(Long bookId,Long userId){
+        User user=userRepository.findById(userId).orElseThrow(()->new EntityNotFoundException("User not found"));
+        Book book=bookRepository.findById(bookId).orElseThrow(()->new EntityNotFoundException("Book not found"));
+        user.addBook(book);
+        book.addUser(user);
+        userRepository.save(user);
+        bookRepository.save(book);
+        return user;
+    }
+    @Transactional
+    public User removeBookFromWishList(Long bookId,Long userId){
+        User user=userRepository.findById(userId).orElseThrow(()->new EntityNotFoundException("User not found"));
+        Book book=bookRepository.findById(bookId).orElseThrow(()->new EntityNotFoundException("Book not found"));
+        user.removeBook(book);
+        book.removeUser(user);
+        userRepository.save(user);
+        bookRepository.save(book);
+        return user;
+    }
+    public Page<Book> getBooks(Long userId ,Pageable pageable) {
+        User user=userRepository.findById(userId).orElseThrow(()->new EntityNotFoundException("User not found"));
+        return userRepository.findBooks(userId, pageable);
     }
     @Transactional
     public User removeLibraryFromUser(Long libraryId,Long userId){

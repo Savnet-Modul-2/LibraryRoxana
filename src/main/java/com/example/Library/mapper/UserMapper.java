@@ -7,6 +7,7 @@ import com.example.Library.entities.Review;
 import com.example.Library.entities.User;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserMapper {
     public static User toEntity(UserDto userDTO) {
@@ -60,6 +61,13 @@ public class UserMapper {
                     .map(ReviewMapper::toSimpleDto)
                     .toList());
         }
+
+        if (user.getFavoriteBooks() != null) {
+            userDTO.setBooks(user.getFavoriteBooks().stream()
+                    .map(BookMapper::toSimpleDto)
+                    .toList());
+        }
+
         return userDTO;
     }
 

@@ -1,6 +1,7 @@
 package com.example.Library.dto;
 
 import com.example.Library.dto.validation.*;
+import com.example.Library.entities.Book;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -48,7 +49,9 @@ public class UserDto {
     private String verificationCode;
     private LocalDateTime verificationCodeExpiration;
 
-    List<LibrarySimpleDto> favoriteLibraries=new ArrayList<>();
+   private List<LibrarySimpleDto> favoriteLibraries=new ArrayList<>();
 
     private List<ReviewSimpleDto> reviews=new ArrayList<>();
+
+    private List<BookSimpleDto> books=new ArrayList<>();
 }

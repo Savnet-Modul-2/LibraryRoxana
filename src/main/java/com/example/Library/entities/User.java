@@ -63,6 +63,18 @@ public class User {
             orphanRemoval = true,
             mappedBy = "user")
     private List<Review> reviews = new ArrayList<>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @JoinTable(name = "USER_FAVORITE_BOOKS", schema = "public",
+            joinColumns = @JoinColumn(name = "user_id", nullable = false),
+            inverseJoinColumns = @JoinColumn(name = "book_id", nullable = false))
+    private List<Book> favoriteBooks = new ArrayList<>();
+    public void addBook(Book book){
+        favoriteBooks.add(book);
+    }
+    public void removeBook(Book book){
+        favoriteBooks.remove(book);
+    }
     public void addLibrary(Library library) {
         favoriteLibraries.add(library);
     }

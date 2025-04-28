@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -38,4 +40,18 @@ public class Librarian {
 
     @Column(name = "VERIFICATION_CODE_EXPIRATION")
     private LocalDateTime verificationCodeExpiration;
+
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE},
+            fetch = FetchType.LAZY,
+            orphanRemoval = true,
+            mappedBy = "librarian")
+    private List<Tag> tags = new ArrayList<>();
+
+    public void addTag(Tag tag){
+        tags.add(tag);
+        tag.setLibrarian(this);
+    }
+    public void removeTag(Tag tag){
+        tags.remove(tag);
+    }
 }

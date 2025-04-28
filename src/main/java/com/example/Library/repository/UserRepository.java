@@ -1,6 +1,7 @@
 package com.example.Library.repository;
 
 
+import com.example.Library.entities.Book;
 import com.example.Library.entities.Library;
 import com.example.Library.entities.Review;
 import com.example.Library.entities.User;
@@ -35,4 +36,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
                 ORDER BY r.createdDate ASC
             """)
     Page<Review> findReviews(Long userId, LocalDate createdDate, Pageable pageable);
+    @Query(value = """
+                SELECT b FROM user u
+                JOIN u.favoriteBooks b
+                WHERE u.id = :userId
+            """)
+    Page<Book> findBooks(@Param("userId") Long userId , Pageable pageable);
 }

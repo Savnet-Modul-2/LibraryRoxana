@@ -1,11 +1,14 @@
 package com.example.Library.controller;
 
+import com.example.Library.dto.BookDto;
 import com.example.Library.dto.LibraryDto;
 import com.example.Library.dto.UserDto;
 import com.example.Library.dto.validation.LoginValidation;
 import com.example.Library.dto.validation.ValidationOrder;
+import com.example.Library.entities.Book;
 import com.example.Library.entities.Library;
 import com.example.Library.entities.User;
+import com.example.Library.mapper.BookMapper;
 import com.example.Library.mapper.LibraryMapper;
 import com.example.Library.mapper.UserMapper;
 import com.example.Library.service.UserService;
@@ -35,6 +38,34 @@ public class UserController {
     public ResponseEntity<?> addLibraryToUser(@PathVariable Long libraryId,
                                               @PathVariable Long userId){
         User user=userService.addLibraryToUser(libraryId,userId);
+        UserDto userDto=UserMapper.toDto(user);
+        return ResponseEntity.ok(userDto);
+    }
+    @PostMapping("/addBookToWishList/{bookId}/{userId}")
+    public ResponseEntity<?> addBookToWishList(@PathVariable Long bookId,
+                                              @PathVariable Long userId){
+        User user=userService.addBookToWishList(bookId,userId);
+        UserDto userDto=UserMapper.toDto(user);
+        return ResponseEntity.ok(userDto);
+    }
+    @GetMapping("/paginated-books/{userId}")
+    public ResponseEntity<?> getBooksPaginated(
+            @PathVariable Long userId,
+            @RequestParam(name = "pageSize", required = false) Integer size,
+            @RequestParam(name = "pageNumber", required = false) Integer page) {
+
+        int pageSize = (size != null) ? size : 10;
+        int pageNumber = (page != null) ? page : 0;
+
+        Page<Book> foundBooks = userService.getBooks(userId, PageRequest.of(pageNumber, pageSize));
+        Page<BookDto> bookDtos = foundBooks.map(BookMapper::toDto);
+
+        return ResponseEntity.ok(bookDtos);
+    }
+    @PostMapping("/removeBookFromWishList/{bookId}/{userId}")
+    public ResponseEntity<?> removeBookFromWishList(@PathVariable Long bookId,
+                                                   @PathVariable Long userId){
+        User user=userService.removeBookFromWishList(bookId,userId);
         UserDto userDto=UserMapper.toDto(user);
         return ResponseEntity.ok(userDto);
     }

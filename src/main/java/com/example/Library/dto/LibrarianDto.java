@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,4 +32,6 @@ public class LibrarianDto {
     private String verificationCode;
     private LocalDateTime verificationCodeExpiration;
     private LibraryDto library;
+
+    private List<TagSimpleDto> tags=new ArrayList<>();
 }
